@@ -3,77 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Osmin Altamirano Portfolio</title>
+<title>Osmin Altamirano - Technical Portfolio</title>
 
 <style>
 body{
     margin:0;
-    font-family:Arial;
+    font-family:Arial, Helvetica, sans-serif;
     background:#0f172a;
-    color:white;
+    color:#e2e8f0;
 }
 
 header{
     text-align:center;
-    padding:25px;
-    background:#1e293b;
+    padding:40px 20px;
+    background:linear-gradient(135deg,#1e293b,#0f172a);
+    border-bottom:2px solid #334155;
 }
 
-h1{
+header h1{
+    margin:0;
+    font-size:38px;
     color:#38bdf8;
 }
 
+header p{
+    margin-top:10px;
+    color:#cbd5e1;
+}
+
 .container{
-    max-width:1000px;
+    max-width:1100px;
     margin:auto;
     padding:20px;
 }
 
 .card{
     background:#1e293b;
-    padding:20px;
+    padding:25px;
     margin-bottom:20px;
-    border-radius:10px;
-}
-
-.slider{
-    position:relative;
-    width:100%;
-    height:450px;
-    overflow:hidden;
     border-radius:12px;
-    background:#0f172a;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    box-shadow:0 0 15px rgba(0,0,0,0.4);
 }
 
-.slider img{
-    max-width:100%;
-    max-height:100%;
-    display:none;
+.card h2{
+    color:#38bdf8;
+    margin-bottom:15px;
 }
 
-button{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    background:#38bdf8;
-    border:none;
-    padding:10px 15px;
+ul{
+    line-height:1.8;
+}
+
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    gap:10px;
+}
+
+.gallery img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:10px;
+    transition:0.3s;
     cursor:pointer;
-    font-weight:bold;
 }
 
-#prev{left:10px;}
-#next{right:10px;}
+.gallery img:hover{
+    transform:scale(1.05);
+}
 
-.play{
-    position:absolute;
-    bottom:10px;
-    left:50%;
-    transform:translateX(-50%);
-    background:#22c55e;
+footer{
+    text-align:center;
+    padding:25px;
+    color:#94a3b8;
+    border-top:1px solid #334155;
 }
 </style>
 </head>
@@ -82,54 +86,67 @@ button{
 
 <header>
 <h1>Osmin Altamirano</h1>
-<p>Electronics • Maintenance • Robotics • Automation</p>
+<p>Electronics • Electrical Systems • Mechanical Maintenance • Robotics Technician</p>
 </header>
 
 <div class="container">
 
+<!-- CONTACT -->
 <div class="card">
-<h2>Experience</h2>
+<h2>Contact Information</h2>
+<p><b>Address:</b> 2529 SW 18th Street</p>
+<p><b>Email:</b> smartgamersystem@gmail.com</p>
+<p><b>Phone:</b> 786-269-3733</p>
+</div>
+
+<!-- EXPERIENCE -->
+<div class="card">
+<h2>Professional Experience</h2>
 <ul>
-<li>Motors, sensors, conveyors, gearboxes</li>
-<li>Arduino / ESP32 systems</li>
-<li>Industrial maintenance</li>
-<li>TCP/IP robot control systems</li>
+<li>Industrial electrical and mechanical maintenance (Hilton Downtown Miami).</li>
+<li>Preventive and corrective maintenance on conveyors.</li>
+<li>Repair of motors, sensors, belts, gearboxes and electrical systems.</li>
+<li>Reading electrical diagrams and troubleshooting systems.</li>
+<li>Industrial automation and control systems experience.</li>
 </ul>
 </div>
 
+<!-- SKILLS -->
 <div class="card">
-<h2>Image Gallery (Auto Slider)</h2>
+<h2>Electronics & Robotics Skills</h2>
+<ul>
+<li>Servo motors and electric motor systems.</li>
+<li>Arduino and ESP32 development (ESP32-S3).</li>
+<li>Electronic components: diodes, resistors, capacitors, relays.</li>
+<li>Industrial sensors: photoelectric, proximity, infrared, inductive.</li>
+<li>TCP/IP communication for robot control systems.</li>
+<li>Remote monitoring and control of automated systems.</li>
+<li>Basic networking: routers, switches, VLAN systems.</li>
+</ul>
+</div>
 
-<div class="slider">
-    <button id="prev">◀</button>
-    <button id="next">▶</button>
-    <button class="play" id="play">PLAY</button>
-
-    <div id="slides"></div>
+<!-- GALLERY -->
+<div class="card">
+<h2>Project Gallery</h2>
+<div class="gallery" id="gallery"></div>
 </div>
 
 </div>
 
-</div>
+<footer>
+© 2026 Osmin Altamirano - Technical Portfolio
+</footer>
 
 <script>
 
-const slides = document.getElementById("slides");
+const gallery = document.getElementById("gallery");
 
-let images = [];
-let current = 0;
-let playing = false;
-let interval;
-
-// CARGA AUTOMÁTICA (1.jpg - 50.jpg)
-for(let i=1;i<=50;i++){
-    let img = document.createElement("img");
-    img.src = i + ".jpg";
+function addImage(src){
+    const img = document.createElement("img");
+    img.src = src;
 
     img.onload = function(){
-        images.push(img);
-        slides.appendChild(img);
-        if(images.length === 1) showImage(0);
+        gallery.appendChild(img);
     };
 
     img.onerror = function(){
@@ -137,42 +154,19 @@ for(let i=1;i<=50;i++){
     };
 }
 
-function showImage(index){
-    images.forEach(i => i.style.display="none");
-    if(images[index]){
-        images[index].style.display="block";
-    }
-    current = index;
+/* =========================
+   IMAGES RANGE 1 (1) - 1 (3)
+========================= */
+for(let i=1;i<=3;i++){
+    addImage(`1 (${i}).jpg`);
 }
 
-document.getElementById("next").onclick = function(){
-    if(images.length===0) return;
-    current = (current+1) % images.length;
-    showImage(current);
-};
-
-document.getElementById("prev").onclick = function(){
-    if(images.length===0) return;
-    current = (current-1+images.length) % images.length;
-    showImage(current);
-};
-
-document.getElementById("play").onclick = function(){
-
-    if(playing){
-        clearInterval(interval);
-        playing = false;
-        this.innerText = "PLAY";
-    } else {
-        playing = true;
-        this.innerText = "STOP";
-
-        interval = setInterval(()=>{
-            current = (current+1) % images.length;
-            showImage(current);
-        },2000);
-    }
-};
+/* =========================
+   IMAGES RANGE A1 (4) - A1 (75)
+========================= */
+for(let i=4;i<=75;i++){
+    addImage(`A1 (${i}).jpg`);
+}
 
 </script>
 
