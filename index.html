@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Osmin Altamirano - Technical Portfolio</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#0f172a;
+    color:white;
+}
+
+header{
+    text-align:center;
+    padding:40px 20px;
+    background:linear-gradient(135deg,#1e293b,#0f172a);
+}
+
+header h1{
+    font-size:3rem;
+    color:#38bdf8;
+}
+
+header p{
+    margin-top:10px;
+    color:#cbd5e1;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:#1e293b;
+    padding:25px;
+    border-radius:15px;
+    margin-bottom:20px;
+    box-shadow:0 0 20px rgba(0,0,0,.3);
+}
+
+.card h2{
+    color:#38bdf8;
+    margin-bottom:15px;
+}
+
+.card ul{
+    padding-left:20px;
+}
+
+.card li{
+    margin-bottom:8px;
+}
+
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    gap:15px;
+}
+
+.gallery img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    border-radius:12px;
+    transition:.3s;
+    cursor:pointer;
+}
+
+.gallery img:hover{
+    transform:scale(1.03);
+}
+
+.loading{
+    text-align:center;
+    padding:30px;
+    font-size:18px;
+}
+
+footer{
+    text-align:center;
+    padding:30px;
+    color:#94a3b8;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.9);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.modal img{
+    max-width:95%;
+    max-height:95%;
+    border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Osmin Altamirano</h1>
+    <p>Electronics • Robotics • Industrial Maintenance • Automation</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h2>Contact Information</h2>
+
+<p><b>Address:</b> 2529 SW 18th Street, Miami, FL</p>
+<p><b>Email:</b> smartgamersystem@gmail.com</p>
+<p><b>Phone:</b> 786-269-3733</p>
+</div>
+
+<div class="card">
+<h2>Professional Experience</h2>
+
+<ul>
+<li>Industrial electrical and mechanical maintenance.</li>
+<li>Troubleshooting motors, conveyors, sensors, relays and industrial controls.</li>
+<li>Reading electrical diagrams and technical schematics.</li>
+<li>Preventive and corrective maintenance.</li>
+<li>Industrial automation systems.</li>
+<li>Warehouse and hospitality maintenance experience.</li>
+</ul>
+
+</div>
+
+<div class="card">
+<h2>Electronics & Robotics Skills</h2>
+
+<ul>
+<li>Arduino development.</li>
+<li>ESP32 / ESP32-S3 projects.</li>
+<li>Servo motors and electric motors.</li>
+<li>Industrial sensors.</li>
+<li>Diodes, transistors, relays, capacitors and electronic circuits.</li>
+<li>TCP/IP communication systems.</li>
+<li>Remote robot control software.</li>
+<li>Networking, VLANs, switches and routers.</li>
+<li>Automation and industrial troubleshooting.</li>
+<li>Embedded systems development.</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h2>Project Gallery</h2>
+
+<div class="loading" id="loading">
+Loading images from GitHub...
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+</div>
+
+</div>
+
+<footer>
+© 2026 Osmin Altamirano Technical Portfolio
+</footer>
+
+<div class="modal" id="modal">
+<img id="modalImg">
+</div>
+
+<script>
+
+/*
+CHANGE THESE VALUES
+*/
+
+const githubUser = "YOUR_GITHUB_USER";
+const repository = "YOUR_REPOSITORY";
+const folder = "images";
+
+/*
+END CONFIG
+*/
+
+const gallery = document.getElementById("gallery");
+const loading = document.getElementById("loading");
+
+const api =
+`https://api.github.com/repos/${githubUser}/${repository}/contents/${folder}`;
+
+fetch(api)
+.then(response => response.json())
+.then(files => {
+
+    loading.style.display = "none";
+
+    files.forEach(file => {
+
+        const name = file.name.toLowerCase();
+
+        if(
+            name.endsWith(".jpg") ||
+            name.endsWith(".jpeg") ||
+            name.endsWith(".png") ||
+            name.endsWith(".webp")
+        ){
+
+            const img = document.createElement("img");
+
+            img.src = file.download_url;
+            img.alt = file.name;
+
+            img.onclick = () => {
+                modal.style.display = "flex";
+                modalImg.src = file.download_url;
+            };
+
+            gallery.appendChild(img);
+        }
+    });
+})
+.catch(error => {
+
+    loading.innerHTML =
+    "Unable to load images. Check GitHub repository settings.";
+
+    console.error(error);
+
+});
+
+const modal = document.getElementById("modal");
+const modalImg = document.getElementById("modalImg");
+
+modal.onclick = () => {
+    modal.style.display = "none";
+};
+
+</script>
+
+</body>
+</html>
