@@ -15,7 +15,7 @@ body{
 
 header{
     text-align:center;
-    padding:30px;
+    padding:25px;
     background:#1e293b;
 }
 
@@ -36,17 +36,44 @@ h1{
     border-radius:10px;
 }
 
-.gallery{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-    gap:10px;
+.slider{
+    position:relative;
+    width:100%;
+    height:450px;
+    overflow:hidden;
+    border-radius:12px;
+    background:#0f172a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
-.gallery img{
-    width:100%;
-    height:200px;
-    object-fit:cover;
-    border-radius:10px;
+.slider img{
+    max-width:100%;
+    max-height:100%;
+    display:none;
+}
+
+button{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:#38bdf8;
+    border:none;
+    padding:10px 15px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+#prev{left:10px;}
+#next{right:10px;}
+
+.play{
+    position:absolute;
+    bottom:10px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#22c55e;
 }
 </style>
 </head>
@@ -63,43 +90,90 @@ h1{
 <div class="card">
 <h2>Experience</h2>
 <ul>
-<li>Industrial maintenance and electrical systems</li>
 <li>Motors, sensors, conveyors, gearboxes</li>
-<li>Arduino & ESP32 projects</li>
-<li>Robotics and automation systems</li>
-<li>TCP/IP remote control systems</li>
+<li>Arduino / ESP32 systems</li>
+<li>Industrial maintenance</li>
+<li>TCP/IP robot control systems</li>
 </ul>
 </div>
 
 <div class="card">
-<h2>Gallery</h2>
-<div class="gallery" id="gallery"></div>
+<h2>Image Gallery (Auto Slider)</h2>
+
+<div class="slider">
+    <button id="prev">◀</button>
+    <button id="next">▶</button>
+    <button class="play" id="play">PLAY</button>
+
+    <div id="slides"></div>
+</div>
+
 </div>
 
 </div>
 
 <script>
-const gallery = document.getElementById("gallery");
 
-// Cambia este número si quieres más o menos intentos
-const MAX_IMAGES = 200;
+const slides = document.getElementById("slides");
 
-for (let i = 1; i <= MAX_IMAGES; i++) {
+let images = [];
+let current = 0;
+let playing = false;
+let interval;
 
-    const img = document.createElement("img");
+// CARGA AUTOMÁTICA (1.jpg - 50.jpg)
+for(let i=1;i<=50;i++){
+    let img = document.createElement("img");
+    img.src = i + ".jpg";
 
-    // Puedes usar JPG o PNG
-    img.src = `${i}.jpg`;
-
-    img.onload = function () {
-        gallery.appendChild(img);
+    img.onload = function(){
+        images.push(img);
+        slides.appendChild(img);
+        if(images.length === 1) showImage(0);
     };
 
-    img.onerror = function () {
-        // Si no existe la imagen, simplemente no la muestra
+    img.onerror = function(){
         img.remove();
     };
 }
+
+function showImage(index){
+    images.forEach(i => i.style.display="none");
+    if(images[index]){
+        images[index].style.display="block";
+    }
+    current = index;
+}
+
+document.getElementById("next").onclick = function(){
+    if(images.length===0) return;
+    current = (current+1) % images.length;
+    showImage(current);
+};
+
+document.getElementById("prev").onclick = function(){
+    if(images.length===0) return;
+    current = (current-1+images.length) % images.length;
+    showImage(current);
+};
+
+document.getElementById("play").onclick = function(){
+
+    if(playing){
+        clearInterval(interval);
+        playing = false;
+        this.innerText = "PLAY";
+    } else {
+        playing = true;
+        this.innerText = "STOP";
+
+        interval = setInterval(()=>{
+            current = (current+1) % images.length;
+            showImage(current);
+        },2000);
+    }
+};
+
 </script>
 
 </body>
